@@ -47,6 +47,17 @@ import Hive from "layouts/hive";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
+const maxHives = 10; // 현재 최대 벌집 수
+
+const hiveRoutes = Array.from({ length: maxHives }, (_, index) => ({
+  type: "child",
+  name: `벌집 ${index + 1}`,
+  key: `hive-${index + 1}`,
+  icon: <Icon fontSize="small">hive</Icon>,
+  route: `/hive/${index + 1}`,
+  component: <Hive />,
+}));
+
 const routes = [
   {
     type: "collapse",
@@ -81,12 +92,13 @@ const routes = [
     component: <Notifications />,
   },
   {
-    type: "collapse",
+    type: "parent",
     name: "Hive",
     key: "hive",
     icon: <Icon fontSize="small">cloud</Icon>,
     route: "/hive",
-    component: <Hive />,
+    component: <Hive />, // 기본적으로 Hive 페이지를 사용
+    children: hiveRoutes,
   },
   {
     type: "collapse",

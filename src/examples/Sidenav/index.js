@@ -12,7 +12,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
+import { useState } from "react";
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -52,7 +52,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
-
+  const [isHiveOpen, setIsHiveOpen] = useState(false);
   let textColor = "white";
 
   if (transparentSidenav || (whiteSidenav && !darkMode)) {
@@ -62,7 +62,10 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
-
+  //"Hive" 클릭 시 펼쳐지거나 접히도록 토글하는 핸들러
+  const handleHiveToggle = () => {
+    setIsHiveOpen((prev) => !prev);
+  };
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
     function handleMiniSidenav() {
@@ -84,56 +87,38 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
+  const renderRoutes = routes.map(({ type, name, icon, key, route, component, children }) => {
     let returnValue;
 
     if (type === "collapse") {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
+      returnValue = (
+        <NavLink key={key} to={route}>
+          <SidenavCollapse name={name} icon={icon} active={route === location.pathname} />
+        </NavLink>
+      );
+    } else if (type === "parent" && Array.isArray(children)) {
+      returnValue = (
+        <MDBox key={key}>
           <SidenavCollapse
             name={name}
             icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
+            onClick={handleHiveToggle} // Hive 클릭 시 열림/닫힘 토글
+            noCollapse={false}
           />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
-    } else if (type === "title") {
-      returnValue = (
-        <MDTypography
-          key={key}
-          color={textColor}
-          display="block"
-          variant="caption"
-          fontWeight="bold"
-          textTransform="uppercase"
-          pl={3}
-          mt={2}
-          mb={1}
-          ml={1}
-        >
-          {title}
-        </MDTypography>
-      );
-    } else if (type === "divider") {
-      returnValue = (
-        <Divider
-          key={key}
-          light={
-            (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
-          }
-        />
+          {isHiveOpen && (
+            <List sx={{ pl: 4 }}>
+              {children.map(({ name, route, key }) => (
+                <NavLink key={key} to={route} style={{ textDecoration: "none" }}>
+                  <SidenavCollapse
+                    name={name}
+                    icon={<Icon>fiber_manual_record</Icon>}
+                    active={route === location.pathname}
+                  />
+                </NavLink>
+              ))}
+            </List>
+          )}
+        </MDBox>
       );
     }
 
