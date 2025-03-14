@@ -43,7 +43,7 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import Weather from "layouts/weather";
+import Hive from "layouts/hive";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -82,11 +82,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Weather",
-    key: "weather",
+    name: "Hive",
+    key: "hive",
     icon: <Icon fontSize="small">cloud</Icon>,
-    route: "/weather",
-    component: <Weather />,
+    route: "/hive",
+    component: <Hive />,
   },
   {
     type: "collapse",
