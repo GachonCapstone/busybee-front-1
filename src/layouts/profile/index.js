@@ -51,7 +51,27 @@ import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 
+import { Link } from "react-router-dom";
+
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+} from "@mui/material";
+import ProfileEdit from "./components/ProfileEdit";
+
 function Overview() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    console.log("Opening Profile Edit Modal");
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -59,19 +79,20 @@ function Overview() {
       <Header>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6} xl={4}>
+            <Grid item xs={12} md={6} xl={6}>
               <PlatformSettings />
             </Grid>
-            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
-              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
+            <Grid item xs={12} md={6} xl={6} sx={{ display: "flex" }}>
               <ProfileInfoCard
                 title="profile information"
-                description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+                description="미국에서 양봉 사업 중"
                 info={{
                   fullName: "Alec M. Thompson",
                   mobile: "(44) 123 1234 123",
                   email: "alecthompson@mail.com",
                   location: "USA",
+                  ID: "Richard Davis",
+                  Password: "******",
                 }}
                 social={[
                   {
@@ -90,17 +111,30 @@ function Overview() {
                     color: "instagram",
                   },
                 ]}
-                action={{ route: "", tooltip: "Edit Profile" }}
+                action={{
+                  tooltip: "Edit Profile",
+                  onClick: handleOpen,
+                  route: "./components/ProfileEdit",
+                }}
                 shadow={false}
               />
-              <Divider orientation="vertical" sx={{ mx: 0 }} />
-            </Grid>
-            <Grid item xs={12} xl={4}>
-              <ProfilesList title="conversations" profiles={profilesListData} shadow={false} />
             </Grid>
           </Grid>
         </MDBox>
-        <MDBox pt={2} px={2} lineHeight={1.25}>
+
+        {/* ProfileEdit 모달 */}
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogContent>
+            <ProfileEdit /> {/* ProfileEdit 컴포넌트를 모달 안에 넣음 */}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/*<MDBox pt={2} px={2} lineHeight={1.25}>
           <MDTypography variant="h6" fontWeight="medium">
             Projects
           </MDTypography>
@@ -193,7 +227,7 @@ function Overview() {
               />
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox>*/}
       </Header>
       <Footer />
     </DashboardLayout>

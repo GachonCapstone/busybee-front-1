@@ -30,6 +30,9 @@ import beehive from "assets/images/logos/beehive.png";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 
+// 위험도 색상 박스
+import MDBadge from "components/MDBadge";
+
 function Projects() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -51,6 +54,7 @@ function Projects() {
             <MDBox
               borderRadius="lg"
               display="flex"
+              flexDirection="column"
               justifyContent="space-between"
               alignItems="center"
               p={3}
@@ -59,16 +63,44 @@ function Projects() {
                   `${borderWidth[1]} solid ${borderColor}`,
               }}
             >
-              <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
-              <MDTypography variant="h6" fontWeight="medium">
-                벌통1&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;7852
-              </MDTypography>
-              <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
-                <Tooltip title="Edit Card" placement="top">
-                  <Icon sx={{ cursor: "pointer" }} fontSize="small">
-                    edit
-                  </Icon>
-                </Tooltip>
+              <MDBox display="flex" alignItems="center">
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+                <MDTypography variant="h6" fontWeight="medium">
+                  벌통 1
+                </MDTypography>
+                <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
+                  <Tooltip title="Edit Card" placement="top">
+                    <Icon sx={{ cursor: "pointer" }} fontSize="small">
+                      edit
+                    </Icon>
+                  </Tooltip>
+                </MDBox>
+              </MDBox>
+              <MDBox
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                width="100%"
+                mt={2} // 위쪽 여백 추가 (1 = 4px 기준, 2 = 8px)
+              >
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    말벌
+                  </MDTypography>
+                  <MDBadge badgeContent="위험" color="error" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    응애
+                  </MDTypography>
+                  <MDBadge badgeContent="보통" color="warning" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    종합 상태
+                  </MDTypography>
+                  <MDBadge badgeContent="위험" color="error" variant="gradient" size="sm" />
+                </MDBox>
               </MDBox>
             </MDBox>
           </Grid>
@@ -76,6 +108,7 @@ function Projects() {
             <MDBox
               borderRadius="lg"
               display="flex"
+              flexDirection="column"
               justifyContent="space-between"
               alignItems="center"
               p={3}
@@ -84,16 +117,44 @@ function Projects() {
                   `${borderWidth[1]} solid ${borderColor}`,
               }}
             >
-              <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
-              <MDTypography variant="h6" fontWeight="medium">
-                벌통2&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;5248
-              </MDTypography>
-              <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
-                <Tooltip title="Edit Card" placement="top">
-                  <Icon sx={{ cursor: "pointer" }} fontSize="small">
-                    edit
-                  </Icon>
-                </Tooltip>
+              <MDBox display="flex" alignItems="center">
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+                <MDTypography variant="h6" fontWeight="medium">
+                  벌통 2
+                </MDTypography>
+                <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
+                  <Tooltip title="Edit Card" placement="top">
+                    <Icon sx={{ cursor: "pointer" }} fontSize="small">
+                      edit
+                    </Icon>
+                  </Tooltip>
+                </MDBox>
+              </MDBox>
+              <MDBox
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                width="100%"
+                mt={2} // 위쪽 여백 추가 (1 = 4px 기준, 2 = 8px)
+              >
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    말벌
+                  </MDTypography>
+                  <MDBadge badgeContent="위험" color="error" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    응애
+                  </MDTypography>
+                  <MDBadge badgeContent="위험" color="error" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    종합 상태
+                  </MDTypography>
+                  <MDBadge badgeContent="위험" color="error" variant="gradient" size="sm" />
+                </MDBox>
               </MDBox>
             </MDBox>
           </Grid>
@@ -101,6 +162,7 @@ function Projects() {
             <MDBox
               borderRadius="lg"
               display="flex"
+              flexDirection="column"
               justifyContent="space-between"
               alignItems="center"
               p={3}
@@ -109,16 +171,44 @@ function Projects() {
                   `${borderWidth[1]} solid ${borderColor}`,
               }}
             >
-              <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
-              <MDTypography variant="h6" fontWeight="medium">
-                벌통3&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;5248
-              </MDTypography>
-              <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
-                <Tooltip title="Edit Card" placement="top">
-                  <Icon sx={{ cursor: "pointer" }} fontSize="small">
-                    edit
-                  </Icon>
-                </Tooltip>
+              <MDBox display="flex" alignItems="center">
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+                <MDTypography variant="h6" fontWeight="medium">
+                  벌통 3
+                </MDTypography>
+                <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
+                  <Tooltip title="Edit Card" placement="top">
+                    <Icon sx={{ cursor: "pointer" }} fontSize="small">
+                      edit
+                    </Icon>
+                  </Tooltip>
+                </MDBox>
+              </MDBox>
+              <MDBox
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                width="100%"
+                mt={2} // 위쪽 여백 추가 (1 = 4px 기준, 2 = 8px)
+              >
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    말벌
+                  </MDTypography>
+                  <MDBadge badgeContent="안전" color="success" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    응애
+                  </MDTypography>
+                  <MDBadge badgeContent="보통" color="warning" variant="gradient" size="sm" />
+                </MDBox>
+                <MDBox display="flex" alignItems="center">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    종합 상태
+                  </MDTypography>
+                  <MDBadge badgeContent="보통" color="warning" variant="gradient" size="sm" />
+                </MDBox>
               </MDBox>
             </MDBox>
           </Grid>
