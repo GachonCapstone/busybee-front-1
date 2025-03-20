@@ -48,12 +48,12 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="warningAmber"
-                title="Hornet"
+                title="현재 감지된 말벌 수"
                 count={62}
                 percentage={{
                   color: "primary",
                   amount: "+5%",
-                  label: "than lask week",
+                  label: "than lask time",
                 }}
               />
             </MDBox>
@@ -77,12 +77,12 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="warning"
                 icon="store"
-                title="Parasite"
+                title="현재 감지된 기생충 수"
                 count="70"
                 percentage={{
                   color: "primary",
                   amount: "+2%",
-                  label: "than yesterday",
+                  label: "than last time",
                 }}
               />
             </MDBox>
@@ -120,7 +120,7 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="warning"
-                  title="응애 감지 현황"
+                  title="응애 알림 발생 횟수"
                   description={
                     <>
                       (<strong>+15%</strong>) 전일 대비 증가.
@@ -135,7 +135,7 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
-                  title="말벌 감지 현황"
+                  title="말벌 알림 발생 횟수"
                   description="전일 대비 2% 감소"
                   date="just updated"
                   chart={tasks}

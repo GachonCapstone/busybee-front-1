@@ -1,72 +1,51 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-routers components
-import { Link } from "react-router-dom";
-
-// prop-types is library for typechecking of props
-import PropTypes from "prop-types";
-
-// @mui material components
+import { useState } from "react";
+import { TextField, Button } from "@mui/material";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
 
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
-
-// Material Dashboard 2 React base styles
-import colors from "assets/theme/base/colors";
-import typography from "assets/theme/base/typography";
-
+import PropTypes from "prop-types";
 function ProfileInfoCard({ title, description, info, social, action, shadow }) {
-  const labels = [];
-  const values = [];
-  const { socialMediaColors } = colors;
-  const { size } = typography;
+  const [editableInfo, setEditableInfo] = useState(info);
 
-  // Convert this form `objectKey` of the object key in to this `object key`
-  Object.keys(info).forEach((el) => {
-    if (el.match(/[A-Z\s]+/)) {
-      const uppercaseLetter = Array.from(el).find((i) => i.match(/[A-Z]+/));
-      const newElement = el.replace(uppercaseLetter, ` ${uppercaseLetter.toLowerCase()}`);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditableInfo({
+      ...editableInfo,
+      [name]: value,
+    });
+  };
 
-      labels.push(newElement);
-    } else {
-      labels.push(el);
-    }
-  });
+  const handleSave = () => {
+    // 여기에서 수정된 정보를 저장하는 로직을 구현
+    console.log("Saved Info:", editableInfo);
+  };
 
-  // Push the object values into the values array
-  Object.values(info).forEach((el) => values.push(el));
-
-  // Render the card info items
-  const renderItems = labels.map((label, key) => (
+  const renderItems = Object.keys(editableInfo).map((label, key) => (
     <MDBox key={label} display="flex" py={1} pr={2}>
       <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
         {label}: &nbsp;
       </MDTypography>
-      <MDTypography variant="button" fontWeight="regular" color="text">
-        &nbsp;{values[key]}
-      </MDTypography>
+      <TextField
+        variant="outlined"
+        fullWidth
+        value={editableInfo[label]}
+        name={label}
+        onChange={handleInputChange}
+        sx={{
+          mt: -0.5,
+          height: "30px", // 세로 크기 조정
+          "& .MuiInputBase-root": {
+            height: "30px", // 내부의 입력 영역의 높이 조정
+          },
+        }}
+      />
     </MDBox>
   ));
 
-  // Render the card social media icons
   const renderSocial = social.map(({ link, icon, color }) => (
     <MDBox
       key={color}
@@ -74,8 +53,8 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
       href={link}
       target="_blank"
       rel="noreferrer"
-      fontSize={size.lg}
-      color={socialMediaColors[color].main}
+      fontSize="large"
+      color={color}
       pr={1}
       pl={0.5}
       lineHeight={1}
@@ -90,7 +69,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
         <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
           {title}
         </MDTypography>
-        <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
+        <MDTypography component="a" href={action.route} variant="body2" color="secondary">
           <Tooltip title={action.tooltip} placement="top">
             <Icon>edit</Icon>
           </Tooltip>
@@ -113,18 +92,16 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
             </MDTypography>
             {renderSocial}
           </MDBox>
+          <Button variant="contained" color="white" onClick={handleSave} sx={{ mt: 2 }}>
+            Save
+          </Button>
         </MDBox>
       </MDBox>
     </Card>
   );
 }
 
-// Setting default props for the ProfileInfoCard
-ProfileInfoCard.defaultProps = {
-  shadow: true,
-};
-
-// Typechecking props for the ProfileInfoCard
+// PropTypes 설정
 ProfileInfoCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -135,6 +112,11 @@ ProfileInfoCard.propTypes = {
     tooltip: PropTypes.string.isRequired,
   }).isRequired,
   shadow: PropTypes.bool,
+};
+
+// defaultProps 설정
+ProfileInfoCard.defaultProps = {
+  shadow: true,
 };
 
 export default ProfileInfoCard;

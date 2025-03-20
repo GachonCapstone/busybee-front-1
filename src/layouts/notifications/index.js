@@ -31,6 +31,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
+import { Link } from "react-router-dom";
+
 function Notifications() {
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
@@ -48,11 +50,16 @@ function Notifications() {
 
   const alertContent = (name) => (
     <MDTypography variant="body2" color="white">
-      A simple {name} alert with{" "}
-      <MDTypography component="a" href="#" variant="body2" fontWeight="medium" color="white">
-        an example link
+      {name} alert 벌통1 내부 온도 30도{" "}
+      <MDTypography
+        component={Link}
+        to="../hive/1"
+        variant="body2"
+        fontWeight="medium"
+        color="white"
+      >
+        벌통 테이블로 이동
       </MDTypography>
-      . Give it a click if you like.
     </MDTypography>
   );
 
