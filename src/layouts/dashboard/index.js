@@ -34,6 +34,7 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import Weather from "layouts/dashboard/components/Weather";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
@@ -89,17 +90,7 @@ function Dashboard() {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="light mode"
-                title="Weather"
-                count="5°C"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
+              <Weather />
             </MDBox>
           </Grid>
         </Grid>
