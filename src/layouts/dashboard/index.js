@@ -36,8 +36,27 @@ import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import Weather from "layouts/dashboard/components/Weather";
 
+// axios api including base URL
+import api from "../../api/axiosInstance";
+
+import { useParams } from 'react-router-dom';
+
+
+
+
+
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+
+  const {id} = useParams();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    api
+      .get(`${process.env.REACT_APP_API_URL}/users/${id}/dashboard`)
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Error fetching user dashboard:", err));
+  }, [id]);
 
   return (
     <DashboardLayout>

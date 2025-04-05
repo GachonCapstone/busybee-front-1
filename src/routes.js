@@ -64,7 +64,7 @@ const routes = [
     name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
+    route: "/users/:id/dashboard",
     component: <Dashboard />,
   },
   {
