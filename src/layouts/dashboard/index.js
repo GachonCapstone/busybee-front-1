@@ -60,8 +60,8 @@ function Dashboard() {
       })
       .catch((err) => console.error("Error fetching user dashboard:", err));
   }, [loginId]);
-
-
+  
+  if (!data) return <div>로딩 중...</div>;
 
   return (
     <DashboardLayout>

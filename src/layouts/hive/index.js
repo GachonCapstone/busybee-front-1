@@ -8,7 +8,7 @@
 
 Coded by www.creative-tim.com
 
- =========================================================
+=========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
@@ -39,7 +39,7 @@ import reportsLineChartData from "layouts/hive/data/reportsLineChartData";
 import HornetVideo from "layouts/hive/components/hornet_video";
 import BugVideo from "layouts/hive/components/bug_video";
 
-function hive() {
+function Hive() {
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
   const [warningSB, setWarningSB] = useState(false);
@@ -243,4 +243,4 @@ function hive() {
   );
 }
 
-export default hive;
+export default Hive;
