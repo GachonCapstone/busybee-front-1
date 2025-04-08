@@ -36,8 +36,32 @@ import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import Weather from "layouts/dashboard/components/Weather";
 
+// axios api including base URL
+import api from "../../api/axiosInstance";
+
+import {useParams} from 'react-router-dom';
+
+import {useState, useEffect} from 'react';
+
+
+
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+
+  const {loginId} = useParams();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    api
+      .get(`${process.env.REACT_APP_API_URL}/users/${loginId}/dashboard`)
+      .then((res) => {
+        console.log("📦 전체 Dashboard 데이터 (JSON):", JSON.stringify(res.data, null, 2)); 
+        setData(res.data);
+      })
+      .catch((err) => console.error("Error fetching user dashboard:", err));
+  }, [loginId]);
+
+
 
   return (
     <DashboardLayout>
@@ -49,8 +73,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="warningAmber"
-                title="현재 감지된 말벌 수"
-                count={62}
+                title="오늘 감지된 말벌 수"
+                count={data.todayHornetCount}
                 percentage={{
                   color: "primary",
                   amount: "+5%",
@@ -63,8 +87,8 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="activity"
-                count="1200"
+                title="오늘 평균 꿀벌 활동량"
+                count={data.todayAverageActivityLevel}
                 percentage={{
                   color: "success",
                   amount: "+10%",
@@ -78,8 +102,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="warning"
                 icon="store"
-                title="현재 감지된 기생충 수"
-                count="70"
+                title="오늘 감지된 기생충 수"
+                count={data.todayParasiteCount}
                 percentage={{
                   color: "primary",
                   amount: "+2%",
