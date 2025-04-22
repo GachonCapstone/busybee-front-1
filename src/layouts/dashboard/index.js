@@ -47,7 +47,6 @@ import {useState, useEffect} from 'react';
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-
   const {loginId} = useParams();
   const [data, setData] = useState(null);
 
