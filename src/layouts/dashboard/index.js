@@ -53,9 +53,9 @@ function Dashboard() {
 
   useEffect(() => {
     api
-      .get(`${process.env.REACT_APP_API_URL}/users/${loginId}/dashboard`)
+      .get(`/users/${loginId}/dashboard`)
       .then((res) => {
-        console.log("📦 전체 Dashboard 데이터 (JSON):", JSON.stringify(res.data, null, 2)); 
+        console.log("전체 Dashboard 데이터 (JSON):", JSON.stringify(res.data, null, 2)); 
         setData(res.data);
       })
       .catch((err) => console.error("Error fetching user dashboard:", err));
