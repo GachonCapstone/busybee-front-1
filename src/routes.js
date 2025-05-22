@@ -43,6 +43,7 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import KakaoCallback from "layouts/authentication/sign-in/kakao";
 import Hive from "layouts/hive";
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -115,6 +116,13 @@ const routes = [
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
+  },
+  {
+    type: "",
+    name: "Kakao Callback",
+    key: "kakao-callback",
+    route: "/authentication/sign-in/kakao",
+    component: <KakaoCallback />,
   },
   {
     type: "collapse",
