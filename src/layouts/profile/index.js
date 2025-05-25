@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
@@ -54,25 +39,18 @@ import ProfileEdit from "./components/ProfileEdit";
 import axios from "axios";
 
 function Overview() {
-  const loginId = localStorage.getItem("loginId");
+  const loginId = localStorage.getItem("loginId");   // userId로 사용
   const [profile, setProfile] = useState(null);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-
     if (!loginId) return;
-
     axios
       .get(`/api/v1/users/${loginId}`)
-      .then(res => {
-        console.log("▶ profile data:", res.data);
-        setProfile(res.data);
-      })
-      .catch((e) => console.error(e));
+      .then((res) => setProfile(res.data))
+      .catch(console.error);
   }, [loginId]);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  if (!profile) return null; // 로딩 처리
 
   return (
     <DashboardLayout>
@@ -84,59 +62,28 @@ function Overview() {
             <Grid item xs={12} md={6} xl={6}>
               <PlatformSettings />
             </Grid>
+
             <Grid item xs={12} md={6} xl={6} sx={{ display: "flex" }}>
               <ProfileInfoCard
                 title="profile information"
                 description="경기도 양평에서 양봉 사업 중"
+                userId={loginId}
                 info={{
-                  nickname: profile?.nickname || "곰돌이푸",
-                  email: profile?.email || "busyBee@gachon.ac.kr",
-                  location: profile?.location || "yangpyeung",
+                  nickname: profile.nickname,
+                  email: profile.email,
+                  location: profile.location,
                 }}
                 social={[
-                  {
-                    link: "https://www.facebook.com/CreativeTim/",
-                    icon: <FacebookIcon />,
-                    color: "facebook",
-                  },
-                  {
-                    link: "https://twitter.com/creativetim",
-                    icon: <TwitterIcon />,
-                    color: "twitter",
-                  },
-                  {
-                    link: "https://www.instagram.com/creativetimofficial/",
-                    icon: <InstagramIcon />,
-                    color: "instagram",
-                  },
+                  { link: "https://www.facebook.com/CreativeTim/", icon: <FacebookIcon />, color: "facebook" },
+                  { link: "https://twitter.com/creativetim", icon: <TwitterIcon />, color: "twitter" },
+                  { link: "https://www.instagram.com/creativetimofficial/", icon: <InstagramIcon />, color: "instagram" },
                 ]}
-                action={{
-                  tooltip: "Edit Profile",
-                  onClick: handleOpen,
-                }}
+                onSaved={setProfile}    // 자식 → 부모 상태 반영
                 shadow={false}
               />
             </Grid>
           </Grid>
         </MDBox>
-
-        {/* ProfileEdit 모달 */}
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Edit Profile</DialogTitle>
-          <DialogContent>
-            <ProfileEdit
-              userId={profile?.id}
-              initialData={profile}
-              onSaved={setProfile}
-              onClose={handleClose}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Header>
       <Footer />
     </DashboardLayout>

@@ -1,48 +1,55 @@
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Tooltip, Icon } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import Card from "@mui/material/Card";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
-
 import PropTypes from "prop-types";
-function ProfileInfoCard({ title, description, info, social, action, shadow }) {
-  const [editableInfo, setEditableInfo] = useState(info);
+import axios from "axios";
 
-  const handleInputChange = (e) => {
+function ProfileInfoCard({ title, description, userId, info, social, onSaved, shadow }) {
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState(info);
+
+  // 보기 ↔ 편집 토글
+  const toggleEdit = () => setEditing((v) => !v);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditableInfo({
-      ...editableInfo,
-      [name]: value,
-    });
+    setForm((p) => ({ ...p, [name]: value }));
   };
 
-  const handleSave = () => {
-    // 여기에서 수정된 정보를 저장하는 로직을 구현
-    console.log("Saved Info:", editableInfo);
+  const handleSave = async () => {
+    try {
+      const res = await axios.patch(`/api/v1/users/${userId}`, form);
+      onSaved(res.data);         // 부모(Overview)의 profile 갱신
+      setEditing(false);         // 보기 모드로 전환
+    } catch (err) {
+      console.error(err);
+      alert("프로필 저장 실패");
+    }
   };
 
-  const renderItems = Object.keys(editableInfo).map((label, key) => (
+  // key-value 렌더
+  const renderItems = Object.keys(form).map((label) => (
     <MDBox key={label} display="flex" py={1} pr={2}>
       <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
         {label}: &nbsp;
       </MDTypography>
-      <TextField
-        variant="outlined"
-        fullWidth
-        value={editableInfo[label]}
-        name={label}
-        onChange={handleInputChange}
-        sx={{
-          mt: -0.5,
-          height: "30px", // 세로 크기 조정
-          "& .MuiInputBase-root": {
-            height: "30px", // 내부의 입력 영역의 높이 조정
-          },
-        }}
-      />
+
+      {editing ? (
+        <TextField
+          variant="outlined"
+          size="small"
+          value={form[label]}
+          name={label}
+          onChange={handleChange}
+          sx={{ mt: -0.5 }}
+        />
+      ) : (
+        <MDTypography variant="button" fontWeight="regular">
+          {form[label]}
+        </MDTypography>
+      )}
     </MDBox>
   ));
 
@@ -66,57 +73,51 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   return (
     <Card sx={{ height: "100%", boxShadow: !shadow && "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
-        <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
+        <MDTypography variant="h6" fontWeight="medium">
           {title}
         </MDTypography>
-        <MDTypography component="a" href={action.route} variant="body2" color="secondary">
-          <Tooltip title={action.tooltip} placement="top">
-            <Icon>edit</Icon>
-          </Tooltip>
-        </MDTypography>
+
+        <Tooltip title={editing ? "Cancel" : "Edit"} placement="top">
+          <Icon sx={{ cursor: "pointer" }} onClick={toggleEdit}>
+            {editing ? "close" : "edit"}
+          </Icon>
+        </Tooltip>
       </MDBox>
+
       <MDBox p={2}>
-        <MDBox mb={2} lineHeight={1}>
-          <MDTypography variant="button" color="text" fontWeight="light">
-            {description}
+        <MDTypography variant="button" color="text" fontWeight="light" mb={2}>
+          {description}
+        </MDTypography>
+
+        {renderItems}
+
+        <MDBox display="flex" py={1} pr={2}>
+          <MDTypography variant="button" fontWeight="bold">
+            social:&nbsp;
           </MDTypography>
+          {renderSocial}
         </MDBox>
-        <MDBox opacity={0.3}>
-          <Divider />
-        </MDBox>
-        <MDBox>
-          {renderItems}
-          <MDBox display="flex" py={1} pr={2}>
-            <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
-              social: &nbsp;
-            </MDTypography>
-            {renderSocial}
-          </MDBox>
-          <Button variant="contained" color="white" onClick={handleSave} sx={{ mt: 2 }}>
+
+        {editing && (
+          <Button variant="contained" sx={{ mt: 2 }} onClick={handleSave}>
             Save
           </Button>
-        </MDBox>
+        )}
       </MDBox>
     </Card>
   );
 }
 
-// PropTypes 설정
 ProfileInfoCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,          // loginId 그대로 전달
   info: PropTypes.objectOf(PropTypes.string).isRequired,
   social: PropTypes.arrayOf(PropTypes.object).isRequired,
-  action: PropTypes.shape({
-    route: PropTypes.string.isRequired,
-    tooltip: PropTypes.string.isRequired,
-  }).isRequired,
+  onSaved: PropTypes.func.isRequired,           // 저장 후 부모 상태 갱신용
   shadow: PropTypes.bool,
 };
 
-// defaultProps 설정
-ProfileInfoCard.defaultProps = {
-  shadow: true,
-};
+ProfileInfoCard.defaultProps = { shadow: true };
 
 export default ProfileInfoCard;

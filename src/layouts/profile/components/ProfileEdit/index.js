@@ -13,13 +13,7 @@ function ProfileEdit({ userId, initialData, onSaved, onClose }) {
   });
 
   useEffect(() => {
-    if (initialData) {
-      setFormData({
-        nickname:     initialData.nickname    || "",
-        email:        initialData.email       || "",
-        location:     initialData.location    || "",
-      });
-    }
+    if (initialData) setFormData(initialData);
   }, [initialData]);
 
   const handleInputChange = (e) => {
