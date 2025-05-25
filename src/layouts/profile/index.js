@@ -41,19 +41,7 @@ import PlatformSettings from "layouts/profile/components/PlatformSettings";
 // Data
 import profilesListData from "layouts/profile/data/profilesListData";
 
-// Images
-import homeDecor1 from "assets/images/home-decor-1.jpg";
-import homeDecor2 from "assets/images/home-decor-2.jpg";
-import homeDecor3 from "assets/images/home-decor-3.jpg";
-import homeDecor4 from "assets/images/home-decor-4.jpeg";
-import team1 from "assets/images/team-1.jpg";
-import team2 from "assets/images/team-2.jpg";
-import team3 from "assets/images/team-3.jpg";
-import team4 from "assets/images/team-4.jpg";
-
-import { Link } from "react-router-dom";
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -63,13 +51,27 @@ import {
   TextField,
 } from "@mui/material";
 import ProfileEdit from "./components/ProfileEdit";
+import axios from "axios";
 
 function Overview() {
+  const loginId = localStorage.getItem("loginId");
+  const [profile, setProfile] = useState(null);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    console.log("Opening Profile Edit Modal");
-    setOpen(true);
-  };
+
+  useEffect(() => {
+
+    if (!loginId) return;
+
+    axios
+      .get(`/api/v1/users/${loginId}`)
+      .then(res => {
+        console.log("▶ profile data:", res.data);
+        setProfile(res.data);
+      })
+      .catch((e) => console.error(e));
+  }, [loginId]);
+
+  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
@@ -85,14 +87,11 @@ function Overview() {
             <Grid item xs={12} md={6} xl={6} sx={{ display: "flex" }}>
               <ProfileInfoCard
                 title="profile information"
-                description="미국에서 양봉 사업 중"
+                description="경기도 양평에서 양봉 사업 중"
                 info={{
-                  fullName: "Alec M. Thompson",
-                  mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
-                  location: "USA",
-                  ID: "Richard Davis",
-                  Password: "******",
+                  nickname: profile?.nickname || "곰돌이푸",
+                  email: profile?.email || "busyBee@gachon.ac.kr",
+                  location: profile?.location || "yangpyeung",
                 }}
                 social={[
                   {
@@ -114,7 +113,6 @@ function Overview() {
                 action={{
                   tooltip: "Edit Profile",
                   onClick: handleOpen,
-                  route: "./components/ProfileEdit",
                 }}
                 shadow={false}
               />
@@ -126,7 +124,12 @@ function Overview() {
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogContent>
-            <ProfileEdit /> {/* ProfileEdit 컴포넌트를 모달 안에 넣음 */}
+            <ProfileEdit
+              userId={profile?.id}
+              initialData={profile}
+              onSaved={setProfile}
+              onClose={handleClose}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -134,100 +137,6 @@ function Overview() {
             </Button>
           </DialogActions>
         </Dialog>
-        {/*<MDBox pt={2} px={2} lineHeight={1.25}>
-          <MDTypography variant="h6" fontWeight="medium">
-            Projects
-          </MDTypography>
-          <MDBox mb={1}>
-            <MDTypography variant="button" color="text">
-              Architects design houses
-            </MDTypography>
-          </MDBox>
-        </MDBox>
-        <MDBox p={2}>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor1}
-                label="project #2"
-                title="modern"
-                description="As Uber works through a huge amount of internal management turmoil."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor2}
-                label="project #1"
-                title="scandinavian"
-                description="Music is something that everyone has their own specific opinion about."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team4, name: "Peterson" },
-                  { image: team1, name: "Elena Morison" },
-                  { image: team2, name: "Ryan Milly" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor3}
-                label="project #3"
-                title="minimalist"
-                description="Different people have different taste, and various types of music."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} xl={3}>
-              <DefaultProjectCard
-                image={homeDecor4}
-                label="project #4"
-                title="gothic"
-                description="Why would anyone pick blue over pink? Pink is obviously a better color."
-                action={{
-                  type: "internal",
-                  route: "/pages/profile/profile-overview",
-                  color: "info",
-                  label: "view project",
-                }}
-                authors={[
-                  { image: team4, name: "Peterson" },
-                  { image: team3, name: "Nick Daniel" },
-                  { image: team2, name: "Ryan Milly" },
-                  { image: team1, name: "Elena Morison" },
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </MDBox>*/}
       </Header>
       <Footer />
     </DashboardLayout>
