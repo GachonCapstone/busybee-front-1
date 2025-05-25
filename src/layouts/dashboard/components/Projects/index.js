@@ -14,9 +14,13 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import { useState } from "react";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
 // Material Dashboard 2 React components
@@ -36,8 +40,21 @@ import MDBadge from "components/MDBadge";
 function Projects() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  const [open, setOpen] = useState(false);
+  const [streamUrl, setStreamUrl] = useState("");
+
+  const handleOpenStream = () => {
+  setStreamUrl("http://localhost:8000/video_feed");
+  setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setStreamUrl("");
+  };
 
   return (
+    <>
     <Card id="delete-account">
       <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium">
@@ -64,7 +81,7 @@ function Projects() {
               }}
             >
               <MDBox display="flex" alignItems="center">
-                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} onClick={handleOpenStream}/>
                 <MDTypography variant="h6" fontWeight="medium">
                   벌통 1
                 </MDTypography>
@@ -83,7 +100,7 @@ function Projects() {
                 width="100%"
                 mt={2} // 위쪽 여백 추가 (1 = 4px 기준, 2 = 8px)
               >
-                <MDBox display="flex" alignItems="center">
+                <MDBox display="flex" alignItems="center" >
                   <MDTypography variant="h6" fontWeight="medium">
                     말벌
                   </MDTypography>
@@ -117,8 +134,8 @@ function Projects() {
                   `${borderWidth[1]} solid ${borderColor}`,
               }}
             >
-              <MDBox display="flex" alignItems="center">
-                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+              <MDBox display="flex" alignItems="center" >
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} onClick={handleOpenStream}/>
                 <MDTypography variant="h6" fontWeight="medium">
                   벌통 2
                 </MDTypography>
@@ -172,7 +189,7 @@ function Projects() {
               }}
             >
               <MDBox display="flex" alignItems="center">
-                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} />
+                <MDBox component="img" src={beehive} alt="master card" width="10%" mr={2} onClick={handleOpenStream}/>
                 <MDTypography variant="h6" fontWeight="medium">
                   벌통 3
                 </MDTypography>
@@ -215,6 +232,33 @@ function Projects() {
         </Grid>
       </MDBox>
     </Card>
+    <StreamModal open={open} onClose={handleClose} streamUrl={streamUrl} />
+    </>
+  );
+}
+
+function StreamModal({ open, onClose, streamUrl }) {
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+      <DialogTitle>
+        실시간 스트리밍
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{ position: "absolute", right: 8, top: 8 }}
+        >
+          <Icon>close</Icon>
+        </IconButton>
+      </DialogTitle>
+      <iframe
+        src={streamUrl}
+        width="100%"
+        height="500px"
+        frameBorder="0"
+        allow="autoplay"
+        title="Live Stream"
+      />
+    </Dialog>
   );
 }
 
