@@ -32,6 +32,8 @@ import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 import brandWhite from "assets/images/pabicon.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import {NotificationProvider} from "./alert/NotificationContext";
+import NotificationComponent from "alert/NotificationComponent";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -120,6 +122,8 @@ export default function App() {
   );
 
   const renderLayout = (
+    <NotificationProvider>
+      <NotificationComponent/>
     <>
       {layout === "dashboard" && (
         <>
@@ -137,6 +141,7 @@ export default function App() {
       )}
       <Routes>{getRoutes(routes)}</Routes>
     </>
+    </NotificationProvider>
   );
 
   return direction === "rtl" ? (
