@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -34,6 +34,24 @@ import Footer from "examples/Footer";
 import { Link } from "react-router-dom";
 
 function Notifications() {
+   // 상태(state) 선언
+    const [tableData, setTableData] = useState(null);
+
+  // user id가 1인 벌통의 정보 불러옴
+    const fetchData = () => {
+      fetch("http://localhost:8080/users/1/notifications")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("API에서 받은 데이터:", data);
+          setTableData(data); // 받은 데이터를 상태에 저장
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    };
+  
+    useEffect(() => {
+      fetchData(); // 초기 데이터 로딩
+    }, []);
+
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
   const [warningSB, setWarningSB] = useState(false);
@@ -48,7 +66,7 @@ function Notifications() {
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
 
-  const alertContent = (name) => (
+  /*const alertContent = (name) => (
     <MDTypography variant="body2" color="white">
       {name} alert 벌통1 내부 온도 30도{" "}
       <MDTypography
@@ -61,7 +79,23 @@ function Notifications() {
         벌통 테이블로 이동
       </MDTypography>
     </MDTypography>
+  );*/
+
+  const alertContent = (message, hiveId) => (
+  <MDTypography variant="body2" color="white">
+    {message}{" "}
+    <MDTypography
+      component={Link}
+      to={`../hive/${hiveId}`}
+      variant="body2"
+      fontWeight="medium"
+      color="white"
+    >
+      벌통 테이블로 이동
+    </MDTypography>
+  </MDTypography>
   );
+
 
   const renderSuccessSB = (
     <MDSnackbar
@@ -117,6 +151,16 @@ function Notifications() {
     />
   );
 
+  const alertColors = [
+  "primary",
+  "secondary",
+  "success",
+  "error",
+  "warning",
+  "info",
+  "light",
+  ];
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -128,6 +172,23 @@ function Notifications() {
                 <MDTypography variant="h5">Alerts</MDTypography>
               </MDBox>
               <MDBox pt={2} px={2}>
+                {tableData && tableData.length > 0 ? (
+                  tableData.map((notification, index) => (
+                    <MDAlert
+                      key={notification.id}
+                      color={alertColors[index % alertColors.length]}  // 순환해서 색상 지정
+                      dismissible
+                    >
+                      {alertContent(notification.message, notification.hiveId)}
+                    </MDAlert>
+                  ))
+                ) : (
+                  <MDTypography variant="body2" color="text">
+                    알림이 없습니다.
+                  </MDTypography>
+                )}
+              </MDBox>
+              {/*<MDBox pt={2} px={2}>
                 <MDAlert color="primary" dismissible>
                   {alertContent("primary")}
                 </MDAlert>
@@ -152,11 +213,11 @@ function Notifications() {
                 <MDAlert color="dark" dismissible>
                   {alertContent("dark")}
                 </MDAlert>
-              </MDBox>
+              </MDBox>*/}
             </Card>
           </Grid>
 
-          <Grid item xs={12} lg={8}>
+          {/*<Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={2} lineHeight={0}>
                 <MDTypography variant="h5">Notifications</MDTypography>
@@ -193,7 +254,7 @@ function Notifications() {
                 </Grid>
               </MDBox>
             </Card>
-          </Grid>
+          </Grid>*/}
         </Grid>
       </MDBox>
       <Footer />
