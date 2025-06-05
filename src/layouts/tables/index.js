@@ -32,7 +32,9 @@ import authorsTableData from "layouts/tables/data/authorsTableData";
 import projectsTableData from "layouts/tables/data/projectsTableData";
 
 // 백앤드드
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+import MDBadge from "components/MDBadge";
 
 function Tables() {
   // 상태(state) 선언
@@ -55,72 +57,10 @@ function Tables() {
     fetchData(); // 초기 데이터 로딩
   }, []);
 
-  const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  벌통 현황
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Projects Table
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-        </Grid>
-      </MDBox>
-
-      {/* 받은 데이터를 화면에 출력하는 부분 
+      {/* 받은 데이터를 화면에 출력하는 부분  
       백엔드에 로컬 db 연결 후 관련 데이터 추가하고 실행하면 정상적으로 잘 뜸 */}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
@@ -137,7 +77,7 @@ function Tables() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  받은 데이터
+                  벌통 현황
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
@@ -185,6 +125,39 @@ function Tables() {
                           accessor: "recent_activity_level",
                           align: "center",
                         },
+                        {
+                        Header: "상태",
+                        accessor: "recent_status",
+                        align: "center",
+                        Cell: ({ value }) => {
+                          let badgeProps = {
+                            badgeContent: "",
+                            color: "info", // 기본값
+                            variant: "gradient",
+                            size: "sm",
+                          };
+
+                          switch (value) {
+                            case "GOOD":
+                              badgeProps.badgeContent = "좋음";
+                              badgeProps.color = "success";
+                              break;
+                            case "NORMAL":
+                              badgeProps.badgeContent = "보통";
+                              badgeProps.color = "warning";
+                              break;
+                            case "BAD":
+                              badgeProps.badgeContent = "위험";
+                              badgeProps.color = "error";
+                              break;
+                            default:
+                              badgeProps.badgeContent = value;
+                              badgeProps.color = "dark";
+                          }
+
+                          return <MDBadge {...badgeProps} />;
+                          },
+                        }
                       ],
                       rows: tableData, // API에서 받은 데이터를 rows로 사용
                     }}
@@ -203,9 +176,8 @@ function Tables() {
           </Grid>
         </Grid>
       </MDBox>
-
-      <Footer />
-    </DashboardLayout>
+    <Footer />
+  </DashboardLayout>
   );
 }
 
