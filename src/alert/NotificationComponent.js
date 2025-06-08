@@ -1,13 +1,15 @@
-// alert/NotificationComponent.jsx
 import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { NotificationContext } from './NotificationContext';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function NotificationComponent() {
   const { notifications, setNotifications } = useContext(NotificationContext);
+  const navigate = useNavigate();
+  const { loginId } = useParams();
 
   return (
     <Box
@@ -18,7 +20,7 @@ export default function NotificationComponent() {
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
-        zIndex: 1300,       // 로그인 폼 위에 뜨도록 충분히 높게
+        zIndex: 1300,
       }}
     >
       {notifications.map((notif, idx) => (
@@ -37,6 +39,16 @@ export default function NotificationComponent() {
           </Button>
         </Paper>
       ))}
+      {/* 추가한 버튼 - 항상 보여지게 */}
+      {notifications.length > 0 && (  // 알림이 있을 때만 표시 (원한다면 조건 빼도 됨)
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate(`/users/${loginId}/notifications`)}
+        >
+          Go to Notifications
+        </Button>
+      )}
     </Box>
   );
 }
