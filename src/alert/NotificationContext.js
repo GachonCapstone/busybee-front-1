@@ -13,7 +13,8 @@ export const NotificationProvider = ({ children }) => {
     client.connect({}, () => {
       client.subscribe('/detect/hornet', (msg) => {
         const data = JSON.parse(msg.body);
-        setNotifications((prev) => [...prev, data]);
+        const id = data.id
+        setNotifications((prev) => [...prev, id]);
       });
     });
     return () => client.disconnect();

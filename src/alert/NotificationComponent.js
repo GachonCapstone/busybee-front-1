@@ -28,7 +28,7 @@ export default function NotificationComponent() {
           sx={{ p: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Typography variant="body2">
-            말벌이 감지되었습니다!
+            벌통 {notif}에서 알림 발생
           </Typography>
           <Button size="small" onClick={() => {
             setNotifications(prev => prev.filter((_, i) => i !== idx));
