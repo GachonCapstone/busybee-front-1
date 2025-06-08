@@ -4,12 +4,12 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { NotificationContext } from './NotificationContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function NotificationComponent() {
   const { notifications, setNotifications } = useContext(NotificationContext);
   const navigate = useNavigate();
-  const { loginId } = useParams();
+  const loginId = localStorage.getItem("loginId");
 
   return (
     <Box
@@ -35,18 +35,17 @@ export default function NotificationComponent() {
           <Button size="small" onClick={() => {
             setNotifications(prev => prev.filter((_, i) => i !== idx));
           }}>
-            Dismiss
+            무시
           </Button>
         </Paper>
       ))}
-      {/* 추가한 버튼 - 항상 보여지게 */}
-      {notifications.length > 0 && (  // 알림이 있을 때만 표시 (원한다면 조건 빼도 됨)
+      {notifications.length > 0 && (  // 알림이 있을 때만 표시
         <Button
           variant="contained"
           color="primary"
           onClick={() => navigate(`/users/${loginId}/notifications`)}
         >
-          Go to Notifications
+          알림으로 이동
         </Button>
       )}
     </Box>

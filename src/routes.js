@@ -49,6 +49,8 @@ import Icon from "@mui/material/Icon";
 
 const maxHives = 10; // 현재 최대 벌집 수
 
+const loginId = localStorage.getItem("loginId");
+
 const hiveRoutes = Array.from({ length: maxHives }, (_, index) => ({
   type: "child",
   name: `벌집 ${index + 1}`,
@@ -64,7 +66,7 @@ const routes = [
     name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/users/:loginId/dashboard",
+    route: `/users/${loginId}/dashboard`,
     component: <Dashboard />,
   },
   {
@@ -72,7 +74,7 @@ const routes = [
     name: "Tables",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
+    route: `users/${loginId}/tables`,
     component: <Tables />,
   },
   {
@@ -80,7 +82,7 @@ const routes = [
     name: "Notifications",
     key: "notifications",
     icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
+    route: `users/${loginId}/notifications`,
     component: <Notifications />,
   },
   {

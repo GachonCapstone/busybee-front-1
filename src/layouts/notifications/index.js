@@ -36,10 +36,11 @@ import { Link } from "react-router-dom";
 function Notifications() {
    // 상태(state) 선언
     const [tableData, setTableData] = useState(null);
+  const loginId = localStorage.getItem("loginId");
 
-  // user id가 1인 벌통의 정보 불러옴
+  // loginId로 불러오기
     const fetchData = () => {
-      fetch("http://localhost:8080/users/1/notifications")
+      fetch(`http://localhost:8080/users/${loginId}/notifications`)
         .then((response) => response.json())
         .then((data) => {
           console.log("API에서 받은 데이터:", data);
