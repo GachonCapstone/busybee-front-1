@@ -1,21 +1,28 @@
+// Tables.jsx
 /**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+ =========================================================
+ * Material Dashboard 2 React - v2.2.0
+ =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-react
+ * Copyright 2023 Creative Tim (https://www.creative-tim.com)
 
-Coded by www.creative-tim.com
+ Coded by www.creative-tim.com
 
  =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ */
 
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -27,46 +34,55 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 
-// Data
-import authorsTableData from "layouts/tables/data/authorsTableData";
-import projectsTableData from "layouts/tables/data/projectsTableData";
-
-// 백앤드드
-import { useEffect, useState, useRef } from "react";
-
 import MDBadge from "components/MDBadge";
 
-function Tables() {
-  // 상태(state) 선언
+// React hooks
+import { useEffect, useState } from "react";
+
+export default function Tables() {
+  // 테이블 데이터 상태
   const [tableData, setTableData] = useState(null);
   const loginId = localStorage.getItem("loginId");
 
-  // API 요청 함수
-  // 현재는 user 테이블의 id를 임의로 1로 지정한 상태
-  // user id가 1인 벌통의 정보 불러옴
+  // 모달 상태
+  const [openModal, setOpenModal] = useState(false);
+  const [streamUrl, setStreamUrl] = useState("");
+
+  // 데이터 불러오기
   const fetchData = () => {
     fetch(`http://localhost:8080/users/${loginId}/tables`)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        console.log("API에서 받은 데이터:", data);
-        setTableData(data); // 받은 데이터를 상태에 저장
+        setTableData(data);
+        console.log("tableData: " + data);
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch((err) => console.error("Error fetching data:", err));
   };
 
   useEffect(() => {
-    fetchData(); // 초기 데이터 로딩
-  }, []);
+    fetchData();
+  }, [loginId]);
+
+  // 모달 열기
+  const handleOpenModal = (url) => {
+    setStreamUrl(url);
+    setOpenModal(true);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setStreamUrl("");
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {/* 받은 데이터를 화면에 출력하는 부분  
-      백엔드에 로컬 db 연결 후 관련 데이터 추가하고 실행하면 정상적으로 잘 뜸 */}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
+              {/* 헤더 */}
               <MDBox
                 mx={2}
                 mt={-3}
@@ -81,8 +97,9 @@ function Tables() {
                   벌통 현황
                 </MDTypography>
               </MDBox>
+
+              {/* 테이블 */}
               <MDBox pt={3}>
-                {/* API 데이터가 있을 때만 출력 */}
                 {tableData ? (
                   <DataTable
                     table={{
@@ -91,25 +108,25 @@ function Tables() {
                           Header: "벌통이름",
                           accessor: "hive_name",
                           align: "left",
-                          Cell: ({ value }) => `${value} `, // 온도 뒤에 "도" 추가
+                          Cell: ({ value }) => `${value}`,
                         },
                         {
                           Header: "온도",
                           accessor: "recent_temperature",
                           align: "center",
-                          Cell: ({ value }) => `${value}도`, // 온도 뒤에 "도" 추가
+                          Cell: ({ value }) => `${value}도`,
                         },
                         {
                           Header: "무게",
                           accessor: "recent_weight",
                           align: "center",
-                          Cell: ({ value }) => `${value}kg`, // 무게 뒤에 "kg" 추가
+                          Cell: ({ value }) => `${value}kg`,
                         },
                         {
                           Header: "습도",
                           accessor: "recent_humidity",
                           align: "center",
-                          Cell: ({ value }) => `${value}%`, // 습도 뒤에 "%" 추가
+                          Cell: ({ value }) => `${value}%`,
                         },
                         {
                           Header: "말벌감지횟수",
@@ -127,40 +144,55 @@ function Tables() {
                           align: "center",
                         },
                         {
-                        Header: "상태",
-                        accessor: "recent_status",
-                        align: "center",
-                        Cell: ({ value }) => {
-                          let badgeProps = {
-                            badgeContent: "",
-                            color: "info", // 기본값
-                            variant: "gradient",
-                            size: "sm",
-                          };
-
-                          switch (value) {
-                            case "GOOD":
-                              badgeProps.badgeContent = "좋음";
-                              badgeProps.color = "success";
-                              break;
-                            case "NORMAL":
-                              badgeProps.badgeContent = "보통";
-                              badgeProps.color = "warning";
-                              break;
-                            case "BAD":
-                              badgeProps.badgeContent = "위험";
-                              badgeProps.color = "error";
-                              break;
-                            default:
-                              badgeProps.badgeContent = value;
-                              badgeProps.color = "dark";
-                          }
-
-                          return <MDBadge {...badgeProps} />;
+                          Header: "상태",
+                          accessor: "recent_status",
+                          align: "center",
+                          Cell: ({ value }) => {
+                            let badgeProps = {
+                              badgeContent: "",
+                              color: "info",
+                              variant: "gradient",
+                              size: "sm",
+                            };
+                            switch (value) {
+                              case "GOOD":
+                                badgeProps.badgeContent = "좋음";
+                                badgeProps.color = "success";
+                                break;
+                              case "NORMAL":
+                                badgeProps.badgeContent = "보통";
+                                badgeProps.color = "warning";
+                                break;
+                              case "BAD":
+                                badgeProps.badgeContent = "위험";
+                                badgeProps.color = "error";
+                                break;
+                              default:
+                                badgeProps.badgeContent = value;
+                                badgeProps.color = "dark";
+                            }
+                            return <MDBadge {...badgeProps} />;
                           },
+                        },
+                        {
+                          Header: "열기",
+                          accessor: "streaming_url",
+                          align: "center",
+                          Cell: ({ value }) => (
+                            <Button
+                              variant="contained"
+                              size="small"
+                              onClick={() => {
+                                console.log("button value:", `${value}`);
+                                handleOpenModal(`${value}`);
+                              }}
+                            >
+                              열기
+                            </Button>
+                          ),
                         }
                       ],
-                      rows: tableData, // API에서 받은 데이터를 rows로 사용
+                      rows: tableData,
                     }}
                     isSorted={false}
                     entriesPerPage={false}
@@ -177,9 +209,50 @@ function Tables() {
           </Grid>
         </Grid>
       </MDBox>
-    <Footer />
-  </DashboardLayout>
+
+      {/* 스트리밍 모달 */}
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          Live Stream
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseModal}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{ p: 0, height: "0", paddingTop: "56.25%", position: "relative" }}
+        >
+          {/* 16:9 비율로 iframe 혹은 img 태그 삽입 */}
+          <img
+            src={streamUrl}
+            alt="Live stream"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Footer />
+    </DashboardLayout>
   );
 }
-
-export default Tables;

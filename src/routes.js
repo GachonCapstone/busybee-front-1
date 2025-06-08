@@ -85,15 +85,7 @@ const routes = [
     route: `users/${loginId}/notifications`,
     component: <Notifications />,
   },
-  {
-    type: "parent",
-    name: "Hive",
-    key: "hive",
-    icon: <Icon fontSize="small">cloud</Icon>,
-    route: "/hive",
-    component: <Hive />, // 기본적으로 Hive 페이지를 사용
-    children: hiveRoutes,
-  },
+
   {
     type: "collapse",
     name: "Profile",
