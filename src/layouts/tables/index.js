@@ -39,12 +39,13 @@ import MDBadge from "components/MDBadge";
 function Tables() {
   // 상태(state) 선언
   const [tableData, setTableData] = useState(null);
+  const loginId = localStorage.getItem("loginId");
 
   // API 요청 함수
   // 현재는 user 테이블의 id를 임의로 1로 지정한 상태
   // user id가 1인 벌통의 정보 불러옴
   const fetchData = () => {
-    fetch("http://localhost:8080/users/1/tables")
+    fetch(`http://localhost:8080/users/${loginId}/tables`)
       .then((response) => response.json())
       .then((data) => {
         console.log("API에서 받은 데이터:", data);
